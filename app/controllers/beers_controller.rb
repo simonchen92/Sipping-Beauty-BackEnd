@@ -1,9 +1,15 @@
-class BeersController < ApplicationController
+class BeersController < ProtectedController
   before_action :set_beer, only: [:show, :update, :destroy]
+
+  # OPEN BEER DATABASE USING HTTPARTY
+  def search_beer
+    search_beer = params.require(:search)
+    render json: HTTParty.get("https://public-us.opendatasoft.com/api/records/1.0/search/?dataset=open-beer-database&facet=style_name&facet=cat_name&facet=name_breweries&facet=country")
+  end
 
   # GET /beers
   def index
-    @beers = Beer.all
+    @beers = current_user.beers.all.order('id DESC')
 
     render json: @beers
   end
@@ -15,7 +21,7 @@ class BeersController < ApplicationController
 
   # POST /beers
   def create
-    @beer = Beer.new(beer_params)
+    @beer = current_user.beers.new(beer_params)
 
     if @beer.save
       render json: @beer, status: :created, location: @beer
@@ -41,11 +47,11 @@ class BeersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_beer
-      @beer = Beer.find(params[:id])
+      @beer = current_user.beers.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def beer_params
-      params.require(:beer).permit(:name, :description, :brewery, :rating, :location, :type)
+      params.require(:beer).permit(:user_id, :name, :description, :brewery, :rating, :location, :type)
     end
 end
