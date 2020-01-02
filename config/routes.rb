@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :beers
   # RESTful routes
+  resources :beers
   resources :examples, except: %i[new edit]
 
   # Custom routes
@@ -10,5 +10,5 @@ Rails.application.routes.draw do
   post '/sign-in' => 'users#signin'
   delete '/sign-out' => 'users#signout'
   patch '/change-password' => 'users#changepw'
-  post '/beer-search' => 'beers#beer_search'
+  post '/search-beer' => 'beers#search_beer'
 end
