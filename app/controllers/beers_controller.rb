@@ -41,7 +41,7 @@ class BeersController < ProtectedController
   # OPEN BEER DATABASE USING HTTPARTY
   def search_beer
     search_beer = params.require(:search)
-    render json: HTTParty.get("https://public-us.opendatasoft.com/api/records/1.0/search/?dataset=open-beer-database&facet=style_name&facet=cat_name&facet=name_breweries&facet=country")
+    render json: HTTParty.get("https://data.opendatasoft.com/api/records/1.0/search/?dataset=open-beer-database%40public-us&q=#{search_beer}&rows=30&facet=style_name&facet=cat_name&facet=name_breweries&facet=country")
   end
 
   private
